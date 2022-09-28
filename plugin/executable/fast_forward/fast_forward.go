@@ -63,6 +63,7 @@ type UpstreamConfig struct {
 	Trusted  bool   `yaml:"trusted"`
 	Socks5   string `yaml:"socks5"`
 	SoMark   int    `yaml:"so_mark"`
+	Intf     string `yaml:"interface"`
 
 	IdleTimeout        int    `yaml:"idle_timeout"`
 	MaxConns           int    `yaml:"max_conns"`
@@ -127,6 +128,7 @@ func newFastForward(bp *coremain.BP, args *Args) (*fastForward, error) {
 				ClientSessionCache: tls.NewLRUClientSessionCache(64),
 			},
 			Logger: bp.L(),
+			Interface: c.Intf,
 		}
 
 		u, err := upstream.NewUpstream(c.Addr, opt)

@@ -22,8 +22,9 @@ package upstream
 import (
 	"context"
 	"fmt"
-	"golang.org/x/net/proxy"
 	"net"
+
+	"golang.org/x/net/proxy"
 )
 
 func dialTCP(ctx context.Context, addr, socks5 string, dialer *net.Dialer) (net.Conn, error) {
@@ -36,4 +37,31 @@ func dialTCP(ctx context.Context, addr, socks5 string, dialer *net.Dialer) (net.
 	}
 
 	return dialer.DialContext(ctx, "tcp", addr)
+}
+
+func getIPv4FromInterfaceName(name string) net.Addr {
+	intf, err := net.InterfaceByName(name)
+	if err != nil {
+		return nil
+	}
+	addrs, _ := intf.Addrs()
+	for _, addr := range addrs {
+		ipnet, ok := addr.(*net.IPNet)
+		if ok {
+			ipv4 := ipnet.IP.To4()
+			if ipv4 != nil {
+				return addr
+			}
+		}
+	}
+	return nil
+}
+
+func getUDPAddrFromInterfaceName(name string) *net.UDPAddr {
+	addr := getIPv4FromInterfaceName(name)
+	ipnet, _ := addr.(*net.IPNet)
+	return &net.UDPAddr{
+		IP: ipnet.IP,
+		Port: 0,
+	}
 }

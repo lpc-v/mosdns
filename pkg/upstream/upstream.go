@@ -133,6 +133,7 @@ func NewUpstream(addr string, opt *Opt) (Upstream, error) {
 				d := net.Dialer{
 					Resolver: bootstrap.NewPlainBootstrap(opt.Bootstrap),
 					Control:  getSetMarkFunc(opt.SoMark),
+					LocalAddr: getUDPAddrFromInterfaceName(opt.Interface),
 				}
 				return d.DialContext(ctx, "udp", dialAddr)
 			},
