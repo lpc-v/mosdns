@@ -8,14 +8,14 @@ plugins:
     type: fast_forward
     args:
       upstream:
-        - addr: 8.8.8.8
-        - interface: "eth0"
+        - addr: tcp://8.8.8.8
+          interface: "eth0"
   - tag: forward_google_eth1
     type: fast_forward
     args:
       upstream:
         - addr: 8.8.8.8
-        - interface: "eth1"
+          interface: "eth1"
 
 servers:
   - exec: forward_google_eth0
