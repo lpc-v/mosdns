@@ -3,22 +3,45 @@ log:
   file: ""
 
 plugins:
-  # 转发至 Google 服务器的插件
-  - tag: forward_google_eth0
-    type: fast_forward
-    args:
-      upstream:
-        - addr: tcp://8.8.8.8
-          interface: "eth0"
-  - tag: forward_google_eth1
+  - tag: forward_eth0
     type: fast_forward
     args:
       upstream:
         - addr: 8.8.8.8
+          interface: "eth0"
+  - tag: forward_eth1
+    type: fast_forward
+    args: 
+      upstream:
+        - addr: 8.8.8.8
           interface: "eth1"
 
+  - tag: "user01"
+    type: "query_matcher"
+    args: 
+      client_ip:
+        - "192.168.128.41"
+
+  - tag : "user02"
+    type: "query_matcher"
+    args:
+      client_ip:
+        - "192.168.128.76"
+
+  - tag: "main_sequence"
+    type: "sequence"
+    args:
+      exec:
+        - if: user01
+          exec:
+            - forward_eth0
+        - if: user02
+          exec:
+            - forward_eth1
+
+
 servers:
-  - exec: forward_google_eth0
+  - exec: main_sequence
     listeners:
       - protocol: udp
         addr: 0.0.0.0:53
