@@ -63,7 +63,7 @@ type UpstreamConfig struct {
 	Trusted  bool   `yaml:"trusted"`
 	Socks5   string `yaml:"socks5"`
 	SoMark   int    `yaml:"so_mark"`
-	Intf     string `yaml:"interface"`
+	Intf     string `yaml:"interface"` 
 
 	IdleTimeout        int    `yaml:"idle_timeout"`
 	MaxConns           int    `yaml:"max_conns"`

@@ -1,0 +1,26 @@
+log:
+  level: info
+  file: ""
+
+plugins:
+  # 转发至 Google 服务器的插件
+  - tag: forward_google_eth0
+    type: fast_forward
+    args:
+      upstream:
+        - addr: 8.8.8.8
+        - interface: "eth0"
+  - tag: forward_google_eth1
+    type: fast_forward
+    args:
+      upstream:
+        - addr: 8.8.8.8
+        - interface: "eth1"
+
+servers:
+  - exec: forward_google_eth0
+    listeners:
+      - protocol: udp
+        addr: 0.0.0.0:53
+      - protocol: tcp
+        addr: 0.0.0.0:53

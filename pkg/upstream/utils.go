@@ -39,7 +39,7 @@ func dialTCP(ctx context.Context, addr, socks5 string, dialer *net.Dialer) (net.
 	return dialer.DialContext(ctx, "tcp", addr)
 }
 
-func getIPv4FromInterfaceName(name string) net.Addr {
+func getIPv4FromInterfaceName(name string) net.IP {
 	intf, err := net.InterfaceByName(name)
 	if err != nil {
 		return nil
@@ -50,7 +50,7 @@ func getIPv4FromInterfaceName(name string) net.Addr {
 		if ok {
 			ipv4 := ipnet.IP.To4()
 			if ipv4 != nil {
-				return addr
+				return ipv4
 			}
 		}
 	}
@@ -58,10 +58,12 @@ func getIPv4FromInterfaceName(name string) net.Addr {
 }
 
 func getUDPAddrFromInterfaceName(name string) *net.UDPAddr {
-	addr := getIPv4FromInterfaceName(name)
-	ipnet, _ := addr.(*net.IPNet)
+	ipv4 := getIPv4FromInterfaceName(name)
+	if ipv4 == nil {
+		return nil
+	}
 	return &net.UDPAddr{
-		IP: ipnet.IP,
+		IP: ipv4,
 		Port: 0,
 	}
 }

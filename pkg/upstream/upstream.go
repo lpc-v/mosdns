@@ -177,6 +177,10 @@ func NewUpstream(addr string, opt *Opt) (Upstream, error) {
 				d := &net.Dialer{
 					Resolver: bootstrap.NewPlainBootstrap(opt.Bootstrap),
 					Control:  getSetMarkFunc(opt.SoMark),
+					LocalAddr: &net.TCPAddr{
+						IP: getIPv4FromInterfaceName(opt.Interface),
+						Port: 0,
+					},
 				}
 				return dialTCP(ctx, dialAddr, opt.Socks5, d)
 			},
@@ -205,6 +209,10 @@ func NewUpstream(addr string, opt *Opt) (Upstream, error) {
 				d := &net.Dialer{
 					Resolver: bootstrap.NewPlainBootstrap(opt.Bootstrap),
 					Control:  getSetMarkFunc(opt.SoMark),
+					LocalAddr: &net.TCPAddr{
+						IP: getIPv4FromInterfaceName(opt.Interface),
+						Port: 0,
+					},
 				}
 				conn, err := dialTCP(ctx, dialAddr, opt.Socks5, d)
 				if err != nil {
@@ -268,6 +276,10 @@ func NewUpstream(addr string, opt *Opt) (Upstream, error) {
 					d := &net.Dialer{
 						Resolver: bootstrap.NewPlainBootstrap(opt.Bootstrap),
 						Control:  getSetMarkFunc(opt.SoMark),
+						LocalAddr: &net.TCPAddr{
+							IP: getIPv4FromInterfaceName(opt.Interface),
+							Port: 0,
+						},
 					}
 					return dialTCP(ctx, dialAddr, opt.Socks5, d)
 				},
